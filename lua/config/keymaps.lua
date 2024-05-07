@@ -2,81 +2,46 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
--- Disable continuations
-
 local keymap = vim.keymap
-local opts = { noremap = true, silent = true }
+local default_options = { silent = true, remap = true }
 
-keymap.set("n", "x", '"_x')
+-- Auxiliary
+keymap.set("i", "jj", "<esc>", { desc = "Go to normal mode", unpack(default_options) })
+keymap.set("n", ",<space>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlights", unpack(default_options) })
+keymap.set("n", "x", '"_x', { desc = "Remove symbol and move cursor backwards", unpack(default_options) })
+keymap.set("n", "dw", 'vb"_d', { desc = "Delete a word backwards", unpack(default_options) })
+keymap.set("n", "<c-a>", "gg<s-v>G", { desc = "Select all", unpack(default_options) })
 
--- Increment/decrement
-keymap.set("n", "+", "<C-a>")
-keymap.set("n", "-", "<C-x>")
+-- Save and Quit File
+keymap.set("n", "qq", "<cmd>q<cr>", { desc = "Quit", unpack(default_options) })
+keymap.set("n", "ww", "<cmd>w<cr>", { desc = "Save File", unpack(default_options) })
+keymap.set("n", "wq", "<cmd>w<cr>", { desc = "Save and Quit File", unpack(default_options) })
+keymap.set("n", "qa", "<cmd>q!<cr>", { desc = "Force quit without saving", unpack(default_options) })
 
--- Delete a word backwards
-keymap.set("n", "dw", 'vb"_d')
+-- Panes
+keymap.set("n", "ss", "<cmd>split<cr>", { desc = "Split window horizontally", unpack(default_options) })
+keymap.set("n", "sv", "<cmd>vsplit<cr>", { desc = "Split window vertically", unpack(default_options) })
+keymap.set("n", "<c-w><left>", "<c-w><", { desc = "Resize pane Left", unpack(default_options) })
+keymap.set("n", "<c-w><right>", "<c-w>>", { desc = "Resize pane Right", unpack(default_options) })
+keymap.set("n", "<c-w><up>", "<c-w>+", { desc = "Resize pane Up", unpack(default_options) })
+keymap.set("n", "<c-w><down>", "<c-w>-", { desc = "Resize pane Down", unpack(default_options) })
+keymap.set("n", "<s-h>", "<c-w>W", { desc = "Left Pane", unpack(default_options) }) -- previous
+keymap.set("n", "<s-l>", "<c-w>w", { desc = "Right Pane", unpack(default_options) }) -- next
+keymap.set("n", "<space>", "<c-w>w", { desc = "Next Pane", unpack(default_options) }) -- next
 
--- Select all
-keymap.set("n", "<C-a>", "gg<S-v>G")
+-- Buffer
+keymap.set("n", "gn", "<cmd>bn<cr>", { desc = "Next Buffer", unpack(default_options) })
+keymap.set("n", "gp", "<cmd>bp<cr>", { desc = "Previous Buffer", unpack(default_options) })
 
--- Save with root permission (not working for now)
---vim.api.nvim_create_user_command('W', 'w !sudo tee > /dev/null %', {})
+-- Tabs
+keymap.set("n", "te", "<cmd>tabedit<cr>", { desc = "Empty File in a new tab", unpack(default_options) })
+keymap.set("n", "<tab>", "<cmd>tabnext<cr>", { desc = "Next tab", unpack(default_options) })
+keymap.set("n", "<s-tab>", "<cmd>tabprev<cr>", { desc = "Previous tab", unpack(default_options) })
+keymap.set("n", "tq", "<cmd>tabclose<cr>", { desc = "Close tab", unpack(default_options) })
+keymap.set("n", "<c-,>", "<cmd>tabm -1<cr>", { desc = "Move tab to the left", unpack(default_options) })
+keymap.set("n", "<c-.>", "<cmd>tabm +1<cr>", { desc = "Move tab to the right", unpack(default_options) })
 
--- Disable continuations
-keymap.set("n", "<Leader>o", "o<Esc>^Da", opts)
-keymap.set("n", "<Leader>O", "O<Esc>^Da", opts)
-
--- Jumplist
--- keymap.set("n", "<C-m>", "<C-i>", opts)
-
--- New tab
-keymap.set("n", "te", ":tabedit")
-keymap.set("n", "<tab>", ":tabnext<Return>", opts)
-keymap.set("n", "<s-tab>", ":tabprev<Return>", opts)
-
--- Move tab
-keymap.set("n", "<c-,>", ":tabm -1<Return>", opts)
-keymap.set("n", "<c-.>", ":tabm +1<Return>", opts)
-
--- Split window
-keymap.set("n", "ss", ":split<Return>", opts)
-keymap.set("n", "sv", ":vsplit<Return>", opts)
-
--- Move window
-keymap.set("n", "sh", "<C-w>h")
-keymap.set("n", "sk", "<C-w>k")
-keymap.set("n", "sj", "<C-w>j")
-keymap.set("n", "sl", "<C-w>l")
-
--- Resize window
-keymap.set("n", "<C-w><left>", "<C-w><")
-keymap.set("n", "<C-w><right>", "<C-w>>")
-keymap.set("n", "<C-w><up>", "<C-w>+")
-keymap.set("n", "<C-w><down>", "<C-w>-")
-
--- Diagnostics
-keymap.set("n", "<C-j>", function()
+-- Diagnostic
+keymap.set("n", "<c-j>", function()
   vim.diagnostic.goto_next()
-end, opts)
-
--- keymap.set("n", "<leader>r", function()
---   require("craftzdog.utils").replaceHexWithHSL()
--- end)
-
--- Another
-keymap.set("i", "jj", "<Esc>") -- escape to command mode
-keymap.set("n", ",<space>", ":nohlsearch<cr>") -- remove highlights from searched pattern
-
--- Quit, Save, Quit+Save
-keymap.set("n", "qq", ":q<cr>")
-keymap.set("n", "ww", ":w<cr>")
-keymap.set("n", "wq", ":w<cr>")
-keymap.set("n", "qa", ":q!<cr>")
-
--- Switch Pane
-keymap.set("n", "<S-h>", "<C-w>W") -- previous
-keymap.set("n", "<S-l>", "<C-w>w") -- next
-
--- Buffer navigation
-keymap.set("n", "gn", ":bn<cr>")
-keymap.set("n", "gp", ":bp<cr>")
+end, { desc = "Next diagnostic", unpack(default_options) })
