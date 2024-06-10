@@ -21,12 +21,4 @@ return {
       { "R", "<Cmd>Lspsaga rename<CR>", desc = "Lspsaga global renaming" },
     },
   },
-  {
-    "RRethy/vim-illuminate",
-    opts = {
-      filetypes_denylist = {
-        "sagafinder",
-      },
-    },
-  },
 }

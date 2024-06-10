@@ -6,6 +6,10 @@ require("lspconfig").pyright.setup({
         diagnosticSeverityOverrides = {
           reportIncompatibleVariableOverride = "none",
           reportIncompatibleMethodOverride = "none",
+          reportArgumentType = "none",
+          reportAttributeAccessIssue = "none",
+          reportRedeclaration = "none",
+          reportAssignmentType = "none",
         },
       },
     },
