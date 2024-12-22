@@ -1,15 +1,9 @@
 return {
   {
-    "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "catppuccin",
-    },
-  },
-  -- add more treesitter parsers
-  {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      -- add tsx and treesitter
+      vim.list_extend(opts.ensure_installed, {
         "bash",
         "html",
         "javascript",
@@ -24,9 +18,7 @@ return {
         "typescript",
         "vim",
         "yaml",
-        "rust",
-        "go",
-      },
-    },
+      })
+    end,
   },
 }
