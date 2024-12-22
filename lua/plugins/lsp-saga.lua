@@ -9,8 +9,9 @@ return {
       require("lspsaga").setup(opts)
     end,
     opts = {
-      code_action = { enable = false, extend_gitsigns = true },
-      symbols_in_winbar = { enable = true, show_file = false },
+      code_action_prompt = { enable = false },
+      code_action = { enable = true, extend_gitsigns = true },
+      symbols_in_winbar = { enable = false, show_file = false },
       references = {
         include_declaration = true,
         keys = { quit = keys.quit, goto_location = "<cr>" },
@@ -19,14 +20,8 @@ return {
     keys = {
       { "<leader>j", "<Cmd>Lspsaga finder<CR>", desc = "Lspsaga finder" },
       { "R", "<Cmd>Lspsaga rename<CR>", desc = "Lspsaga global renaming" },
-    },
-  },
-  {
-    "RRethy/vim-illuminate",
-    opts = {
-      filetypes_denylist = {
-        "sagafinder",
-      },
+      { "<leader>ca", "<Cmd>Lspsaga code_action<CR>", desc = "Lspsaga code action" },
+      { "gd", "<Cmd>Lspsaga goto_definition<CR>", desc = "Lspsaga go to definition" },
     },
   },
 }

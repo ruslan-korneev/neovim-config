@@ -36,6 +36,7 @@ return {
         "mypy",
         "ruff",
         "ruff-lsp",
+        "python-lsp-server",
         "black",
         "debugpy",
         -- "vulture",

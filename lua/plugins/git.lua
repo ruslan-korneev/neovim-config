@@ -105,12 +105,12 @@ return {
 
         vim.api.nvim_buf_set_keymap(bufnr, "n", "]h", "", {
           callback = function()
-            gs.next_hunk()
+            gs.nav_hunk("next")
           end,
         })
         vim.api.nvim_buf_set_keymap(bufnr, "n", "[h", "", {
           callback = function()
-            gs.prev_hunk()
+            gs.nav_hunk("prev")
           end,
         })
       end,
