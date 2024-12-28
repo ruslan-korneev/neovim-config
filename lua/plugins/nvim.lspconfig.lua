@@ -13,40 +13,42 @@ return {
     },
   },
 
-  -- add tsserver and setup with typescript.nvim instead of lspconfig
   {
     "neovim/nvim-lspconfig",
-    dependencies = {
-      "jose-elias-alvarez/typescript.nvim",
-      init = function()
-        require("lazyvim.util").lsp.on_attach(function(_, buffer)
-          -- stylua: ignore
-          vim.keymap.set( "n", "<leader>co", "TypescriptOrganizeImports", { buffer = buffer, desc = "Organize Imports" })
-          vim.keymap.set("n", "<leader>cR", "TypescriptRenameFile", { desc = "Rename File", buffer = buffer })
-        end)
-      end,
-    },
-    ---@class PluginLspOpts
+    dependencies = { "williamboman/mason.nvim" },
     opts = {
-      ---@diagnostic disable-next-line: undefined-doc-name
-      ---@type lspconfig.options
-      servers = {
-        -- tsserver will be automatically installed with mason and loaded with lspconfig
-        tsserver = {},
-      },
-      -- you can do any additional lsp server setup here
-      -- return true if you don't want this server to be setup with lspconfig
-      ---@diagnostic disable-next-line: undefined-doc-name
-      ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
-      setup = {
-        -- example to setup with typescript.nvim
-        tsserver = function(_, opts)
-          require("typescript").setup({ server = opts })
-          return true
-        end,
-        -- Specify * to use this function as a fallback for any server
-        -- ["*"] = function(server, opts) end,
-      },
+      code_action_prompt = { enable = false },
     },
+    config = function()
+      local lspconfig = require("lspconfig")
+      local mason = require("mason")
+
+      mason.setup()
+
+      -- pyright
+      lspconfig.pyright.setup({
+        settings = {
+          python = {
+            analysis = {
+              diagnosticSeverityOverrides = {},
+            },
+          },
+        },
+      })
+
+      -- ruff
+      lspconfig.ruff_lsp.setup({
+        on_attach = function(client, bufnr)
+          if client.name == "ruff_lsp" then
+            client.server_capabilities.hoverProvider = false
+          end
+        end,
+        settings = {
+          python = {
+            analysis = { ignore = { "*" } },
+          },
+        },
+      })
+    end,
   },
 }

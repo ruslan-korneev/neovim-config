@@ -26,14 +26,6 @@ local function getGitUserEmail()
   return nil
 end
 
--- Usage
--- local email = getGitUserEmail()
--- if email then
---     print("User email: " .. email)
--- else
---     print("No user email configured in local or global Git config.")
--- end
-
 return {
   {
     "nvim-lualine/lualine.nvim",
