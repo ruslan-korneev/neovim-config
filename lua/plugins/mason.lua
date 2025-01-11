@@ -39,7 +39,7 @@ return {
         "python-lsp-server",
         "black",
         "debugpy",
-        -- "vulture",
+        "vulture",
         "isort",
       },
       auto_update = true,
