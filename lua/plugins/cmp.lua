@@ -118,7 +118,7 @@ return {
 
     -- Подключение LSP для работы автокомплита
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
-    require("lspconfig")["pyright"].setup({
+    vim.lsp.config("pyright", {
       capabilities = capabilities,
       settings = {
         python = {
@@ -130,6 +130,19 @@ return {
         },
       },
     })
+    vim.lsp.enable("pyright")
+    -- require("lspconfig")["pyright"].setup({
+    --   capabilities = capabilities,
+    --   settings = {
+    --     python = {
+    --       analysis = {
+    --         autoSearchPaths = true,
+    --         useLibraryCodeForTypes = true,
+    --         diagnosticMode = "workspace",
+    --       },
+    --     },
+    --   },
+    -- })
 
     -- Подстановка скобок к подсказкам, которым это нужно (дополнение для nvim-autopairs)
     local cmp_autopairs = require("nvim-autopairs.completion.cmp")

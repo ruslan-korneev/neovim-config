@@ -1,54 +1,64 @@
+-- ~/.config/nvim/lua/plugins/lsp.lua
 return {
-  -- add pyright to lspconfig
   {
     "neovim/nvim-lspconfig",
-    ---@class PluginLspOpts
-    opts = {
-      ---@diagnostic disable-next-line: undefined-doc-name
-      ---@type lspconfig.options
-      servers = {
-        -- pyright will be automatically installed with mason and loaded with lspconfig
-        pyright = {},
-      },
+    dependencies = {
+      "mason-org/mason.nvim",
+      "mason-org/mason-lspconfig.nvim",
     },
-  },
 
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = { "williamboman/mason.nvim" },
-    opts = {
-      code_action_prompt = { enable = false },
-    },
-    config = function()
-      local lspconfig = require("lspconfig")
-      local mason = require("mason")
+    --- Change or extend LazyVim's default LSP options
+    opts = function(_, opts)
+      ------------------------------------------------------------------
+      -- 1.  List all servers you want LazyVim to start
+      ------------------------------------------------------------------
+      opts.servers = vim.tbl_extend("force", opts.servers or {}, {
+        pyright   = {},
+        ruff  = {},
+        ts_ls  = {},
+        ton       = {},    -- <-- TON language server
+      })
 
-      mason.setup()
+      ------------------------------------------------------------------
+      -- 2.  (Optional) Add Mason packages to auto-install
+      ------------------------------------------------------------------
+      opts.ensure_installed = vim.list_extend(
+        opts.ensure_installed or {},
+        { "pyright", "ruff", "typescript-language-server" }
+      )
+      -- TON LS is *not* on Mason, so we keep installing it manually.
 
-      -- pyright
-      lspconfig.pyright.setup({
-        settings = {
-          python = {
-            analysis = {
-              diagnosticSeverityOverrides = {},
+      ------------------------------------------------------------------
+      -- 3.  Custom setup for TON because it is not in nvim-lspconfig yet
+      ------------------------------------------------------------------
+      opts.setup = opts.setup or {}
+      opts.setup.ton = function(_, server_opts)
+        local lspconfig = require("lspconfig")
+        local configs   = require("lspconfig.configs")
+
+        -- Register a new lspconfig entry only once
+        if not configs.ton then
+          configs.ton = {
+            default_config = {
+              cmd = {
+                "node",
+                -- adapt the path ↓ or keep it in $PATH and use `vim.fn.exepath "ton-language-server"`
+                vim.fn.expand("/Users/ruslankorneev/.config/ton-language-server/dist/server.js"),
+                "--stdio",
+              },
+              filetypes = { "tolk", "fift", "tlb" },
+              root_dir  = lspconfig.util.root_pattern("package.json", ".git"),
             },
-          },
-        },
-      })
+            docs = {
+              description = "TON Language Server – https://github.com/ton-blockchain/ton-language-server",
+            },
+          }
+        end
 
-      -- ruff
-      lspconfig.ruff_lsp.setup({
-        on_attach = function(client, bufnr)
-          if client.name == "ruff_lsp" then
-            client.server_capabilities.hoverProvider = false
-          end
-        end,
-        settings = {
-          python = {
-            analysis = { ignore = { "*" } },
-          },
-        },
-      })
+        -- Finally start / attach
+        lspconfig.ton.setup(server_opts)
+        return true            -- tell LazyVim that we handled it
+      end
     end,
   },
 }

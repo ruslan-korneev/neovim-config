@@ -26,8 +26,15 @@ vim.opt.wildignore:append({ "*/node_modules/*" })
 vim.opt.splitbelow = true -- Put new windows below current
 vim.opt.splitright = true -- Put new windows right of current
 vim.opt.splitkeep = "cursor"
+vim.opt.winborder = "rounded"
 
 vim.g.lazyvim_python_lsp = "pyright"
-vim.g.lazyvim_python_ruff = "ruff_lsp"
+vim.g.lazyvim_python_ruff = "ruff"
 
 vim.opt.foldmethod = "manual"
+
+vim.opt.spelllang = "en_us"
+vim.opt.spell = true
+
+vim.g.autoformat = false
+vim.g.deprecation_warnings = true

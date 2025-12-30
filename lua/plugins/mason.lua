@@ -1,6 +1,6 @@
 return {
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = {
       ui = {
         icons = {
@@ -27,7 +27,6 @@ return {
         "dockerfile-language-server",
         "hadolint",
         "markdownlint",
-        "marksman",
         "shfmt",
         "eslint-lsp",
 
@@ -35,8 +34,7 @@ return {
         "pyright",
         "mypy",
         "ruff",
-        "ruff-lsp",
-        "python-lsp-server",
+        -- "python-lsp-server",
         "black",
         "debugpy",
         "vulture",

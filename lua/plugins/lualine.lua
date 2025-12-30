@@ -31,6 +31,11 @@ return {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
     opts = function(_, opts)
+      opts.sections = {
+        lualine_b = {},
+        lualine_c = { "diff", "diagnostics" },
+        lualine_x = { "filetype" },
+      }
       table.insert(opts.sections.lualine_x, {
         function()
           local email = getGitUserEmail()
