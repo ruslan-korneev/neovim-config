@@ -1,6 +1,7 @@
 return {
   {
     "mason-org/mason.nvim",
+    event = "VeryLazy",
     opts = {
       ui = {
         icons = {
@@ -41,7 +42,7 @@ return {
         "isort",
       },
       auto_update = true,
-      run_on_start = true,
+      run_on_start = false,
     },
   },
 }

@@ -1,1 +1,1 @@
-return { { "tiagovla/scope.nvim", config = true } }
+return { { "tiagovla/scope.nvim", event = "VeryLazy", config = true } }
