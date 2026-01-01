@@ -13,7 +13,18 @@ return {
       -- 1.  List all servers you want LazyVim to start
       ------------------------------------------------------------------
       opts.servers = vim.tbl_extend("force", opts.servers or {}, {
-        pyright   = {},
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = "openFilesOnly",
+                autoImportCompletions = true,
+              },
+            },
+          },
+        },
         ruff  = {},
         ts_ls  = {},
         ton       = {},    -- <-- TON language server

@@ -80,7 +80,6 @@ return {
         { name = "luasnip" },
         { name = "buffer" },
         { name = "path" },
-        { name = "codeium" },
       },
 
       confirm_opts = {
@@ -97,7 +96,6 @@ return {
             luasnip = "[LuaSnip]",
             nvim_lua = "[NvimAPI]",
             path = "[Path]",
-            codeium = "[Codeium]",
           })[entry.source.name]
           return vim_item
         end,
@@ -117,33 +115,6 @@ return {
       matching = { disallow_symbol_nonprefix_matching = false },
     })
 
-    -- Подключение LSP для работы автокомплита
-    local capabilities = require("cmp_nvim_lsp").default_capabilities()
-    vim.lsp.config("pyright", {
-      capabilities = capabilities,
-      settings = {
-        python = {
-          analysis = {
-            autoSearchPaths = true,
-            useLibraryCodeForTypes = true,
-            diagnosticMode = "workspace",
-          },
-        },
-      },
-    })
-    vim.lsp.enable("pyright")
-    -- require("lspconfig")["pyright"].setup({
-    --   capabilities = capabilities,
-    --   settings = {
-    --     python = {
-    --       analysis = {
-    --         autoSearchPaths = true,
-    --         useLibraryCodeForTypes = true,
-    --         diagnosticMode = "workspace",
-    --       },
-    --     },
-    --   },
-    -- })
 
     -- Подстановка скобок к подсказкам, которым это нужно (дополнение для nvim-autopairs)
     local cmp_autopairs = require("nvim-autopairs.completion.cmp")

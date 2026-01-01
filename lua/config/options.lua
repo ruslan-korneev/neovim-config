@@ -38,3 +38,6 @@ vim.opt.spell = true
 
 vim.g.autoformat = false
 vim.g.deprecation_warnings = true
+
+-- Disable diagnostics by default for performance, toggle with <leader>ud
+vim.diagnostic.enable(false)

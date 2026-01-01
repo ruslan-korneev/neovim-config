@@ -3,31 +3,38 @@ return {
   cmd = "Gitsigns",
   lazy = true,
   init = function()
-    -- require("wuelnerdotexe.plugin.util").add_colorscheme_integration("gitsigns")
-    --
-    -- require("wuelnerdotexe.plugin.util").set_option("termguicolors", true)
-    -- require("wuelnerdotexe.plugin.util").set_option("signcolumn", "yes:1")
+    local git_cache = {}
+    local cache_timeout = 30000
 
-    vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile", "BufWritePost" }, {
+    vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
       group = vim.api.nvim_create_augroup("load_gitsigns", { clear = false }),
       callback = function()
         if package.loaded["gitsigns"] then
           vim.api.nvim_clear_autocmds({ group = "load_gitsigns" })
-
           return true
         end
 
-        vim.api.nvim_call_function("system", {
-          "git -C " .. vim.api.nvim_call_function("expand", { "%:p:h" }) .. " rev-parse",
-        })
-
-        if vim.api.nvim_get_vvar("shell_error") ~= 0 then
+        local dir = vim.fn.expand("%:p:h")
+        local cached = git_cache[dir]
+        if cached and (vim.uv.now() - cached.time) < cache_timeout then
+          if cached.is_git then
+            vim.api.nvim_clear_autocmds({ group = "load_gitsigns" })
+            require("lazy").load({ plugins = { "gitsigns.nvim" } })
+          end
           return
         end
 
-        vim.api.nvim_clear_autocmds({ group = "load_gitsigns" })
-
-        require("lazy").load({ plugins = { "gitsigns.nvim" } })
+        vim.fn.jobstart({ "git", "-C", dir, "rev-parse", "--git-dir" }, {
+          on_exit = function(_, exit_code)
+            git_cache[dir] = { is_git = exit_code == 0, time = vim.uv.now() }
+            if exit_code == 0 and not package.loaded["gitsigns"] then
+              vim.schedule(function()
+                vim.api.nvim_clear_autocmds({ group = "load_gitsigns" })
+                require("lazy").load({ plugins = { "gitsigns.nvim" } })
+              end)
+            end
+          end,
+        })
       end,
     })
   end,
