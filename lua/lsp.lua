@@ -76,11 +76,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "gD",         vim.lsp.buf.declaration,     "Goto declaration")
     map("n", "gi",         vim.lsp.buf.implementation,  "Implementation")
     map("n", "gt",         vim.lsp.buf.type_definition, "Type definition")
-    map("n", "K",          vim.lsp.buf.hover,           "Hover")
     map("n", "R",          vim.lsp.buf.rename,          "Rename")
     map("n", "<leader>j",  vim.lsp.buf.references,      "References (finder)")
     map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
-    map("n", "<leader>fm", function() vim.lsp.buf.format({ async = true }) end, "Format")
+    map("n", "<leader>fm", function()
+      local ok_conform, conform = pcall(require, "conform")
+      if ok_conform then
+        conform.format({ async = true, lsp_format = "fallback" })
+      else
+        vim.lsp.buf.format({ async = true })
+      end
+    end, "Format")
     map("n", "[d",         function() vim.diagnostic.jump({ count = -1, float = true }) end, "Prev diagnostic")
     map("n", "]d",         function() vim.diagnostic.jump({ count =  1, float = true }) end, "Next diagnostic")
     map("n", "<leader>cd", vim.diagnostic.open_float,   "Line diagnostics")
