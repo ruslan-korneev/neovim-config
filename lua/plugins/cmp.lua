@@ -1,15 +1,11 @@
 return {
   "hrsh7th/nvim-cmp",
-  event = "InsertEnter",
   dependencies = {
-    {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-nvim-lua",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "hrsh7th/cmp-cmdline",
-      "hrsh7th/cmp-nvim-lsp-signature-help",
-    },
+    "hrsh7th/cmp-nvim-lsp",
+    "hrsh7th/cmp-nvim-lua",
+    "hrsh7th/cmp-buffer",
+    "hrsh7th/cmp-path",
+    "hrsh7th/cmp-nvim-lsp-signature-help",
     {
       "L3MON4D3/LuaSnip",
       dependencies = {
@@ -20,104 +16,78 @@ return {
     },
   },
 
-  config = function()
+  opts = function(_, opts)
     local cmp = require("cmp")
-    require("luasnip.loaders.from_vscode").lazy_load()
 
     local kind_icons = {
-      Text = " ",
+      Text = " ",
       Method = "󰆧",
       Function = "ƒ ",
-      Constructor = " ",
+      Constructor = " ",
       Field = "󰜢 ",
-      Variable = " ",
-      Constant = " ",
-      Class = " ",
+      Variable = " ",
+      Constant = " ",
+      Class = " ",
       Interface = "󰜰 ",
-      Struct = " ",
+      Struct = " ",
       Enum = "了 ",
-      EnumMember = " ",
-      Module = "",
-      Property = " ",
-      Unit = " ",
+      EnumMember = " ",
+      Module = "",
+      Property = " ",
+      Unit = " ",
       Value = "󰎠 ",
       Keyword = "󰌆 ",
-      Snippet = " ",
-      File = " ",
-      Folder = " ",
-      Color = " ",
+      Snippet = " ",
+      File = " ",
+      Folder = " ",
+      Color = " ",
     }
 
-    cmp.setup({
-      snippet = {
-        expand = function(args)
-          require("luasnip").lsp_expand(args.body)
-        end,
-      },
+    opts.window = {
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
+    }
 
-      -- Настройка параметров окна <cmp>
-      window = {
-        completion = cmp.config.window.bordered(), -- Отображение рамки окна подсказок
-        documentation = cmp.config.window.bordered(), -- Отображение рамки окна документации к подсказкам
-      },
-      mapping = cmp.mapping.preset.insert({
-        ["<C-b>"] = cmp.mapping.scroll_docs(-4), -- Прокрутить документацию вверх
-        ["<C-f>"] = cmp.mapping.scroll_docs(4), -- Прокрутить документацию вниз
-        ["<C-Space>"] = cmp.mapping.complete(),
-        ["<C-e>"] = cmp.mapping.abort(),
-        ["<CR>"] = cmp.mapping.confirm({ select = false }), -- Принять текущий элемент (true) или только явно выбранный элемент (false)
-      }),
+    opts.completion = {
+      completeopt = "menu,menuone,noselect",
+    }
 
-      completion = {
-        completeopt = "menu,menuone,noselect",
-      },
-
-      -- Источники для подсказок (порядок имеет значение)
-      sources = {
-        { name = "nvim_lsp" },
-        { name = "nvim_lsp_signature_help" },
-        { name = "nvim_lua" },
-        { name = "luasnip" },
-        { name = "buffer" },
-        { name = "path" },
-      },
-
-      confirm_opts = {
-        behavior = cmp.ConfirmBehavior.Replace,
-        select = false,
-      },
-
-      formatting = {
-        format = function(entry, vim_item)
-          vim_item.kind = string.format("%s %s", kind_icons[vim_item.kind], vim_item.kind) -- Таким образом значки объединяются с названием вида элемента
-          vim_item.menu = ({
-            buffer = "[Buffer]",
-            nvim_lsp = "[LSP]",
-            luasnip = "[LuaSnip]",
-            nvim_lua = "[NvimAPI]",
-            path = "[Path]",
-          })[entry.source.name]
-          return vim_item
-        end,
-      },
+    opts.sources = cmp.config.sources({
+      { name = "nvim_lsp" },
+      { name = "nvim_lsp_signature_help" },
+      { name = "nvim_lua" },
+      { name = "luasnip" },
+      { name = "buffer" },
+      { name = "path" },
     })
 
-    -- Использовать источник буфера для `/` и `?` (если вы включили `native_menu`, это больше не будет работать)
-    cmp.setup.cmdline({ "/", "?" }, {
-      mapping = cmp.mapping.preset.cmdline(),
-      sources = { { name = "buffer" } },
+    opts.confirm_opts = {
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = false,
+    }
+
+    opts.formatting = {
+      format = function(entry, vim_item)
+        vim_item.kind = string.format("%s %s", kind_icons[vim_item.kind] or "", vim_item.kind)
+        vim_item.menu = ({
+          buffer = "[Buffer]",
+          nvim_lsp = "[LSP]",
+          luasnip = "[LuaSnip]",
+          nvim_lua = "[NvimAPI]",
+          path = "[Path]",
+        })[entry.source.name]
+        return vim_item
+      end,
+    }
+
+    opts.mapping = vim.tbl_extend("force", opts.mapping or {}, {
+      ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+      ["<C-f>"] = cmp.mapping.scroll_docs(4),
+      ["<C-Space>"] = cmp.mapping.complete(),
+      ["<C-e>"] = cmp.mapping.abort(),
+      ["<CR>"] = cmp.mapping.confirm({ select = false }),
     })
 
-    -- Используйте cmdline и источник пути для ':' (если вы включили `native_menu`, это больше не будет работать)
-    cmp.setup.cmdline(":", {
-      mapping = cmp.mapping.preset.cmdline(),
-      sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
-      matching = { disallow_symbol_nonprefix_matching = false },
-    })
-
-
-    -- Подстановка скобок к подсказкам, которым это нужно (дополнение для nvim-autopairs)
-    local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-    cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+    return opts
   end,
 }
