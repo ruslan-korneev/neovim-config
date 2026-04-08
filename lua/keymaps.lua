@@ -37,8 +37,21 @@ map("n", "<C-,>",   "<cmd>tabmove 0<cr>",   { desc = "Move tab to start" })
 map("n", "<C-.>",   "<cmd>tabmove +1<cr>",  { desc = "Move tab right" })
 
 -- ── Diagnostics ─────────────────────────────────────────────────────────────
-map("n", "<C-j>", function() vim.diagnostic.jump({ count = 1, float = true }) end,
+map("n", "<C-j>", function() vim.diagnostic.jump({ count =  1, float = true }) end,
   { desc = "Next diagnostic" })
+map("n", "<C-k>", function() vim.diagnostic.jump({ count = -1, float = true }) end,
+  { desc = "Prev diagnostic" })
+
+-- ── Hover (safety net so K never falls through to keywordprg=pydoc/man) ─────
+-- Buffer-local K is also set in LspAttach when an LSP is attached; this global
+-- mapping covers buffers without LSP and prevents the default `K` behaviour.
+map("n", "K", function()
+  if next(vim.lsp.get_clients({ bufnr = 0 })) then
+    vim.lsp.buf.hover()
+  else
+    vim.notify("No LSP client attached to this buffer", vim.log.levels.INFO)
+  end
+end, { desc = "Hover" })
 
 -- ── File explorer (built-in netrw — replaces neo-tree / file_browser) ───────
 map("n", "sf", "<cmd>Explore<cr>", { desc = "Explore (netrw)" })
