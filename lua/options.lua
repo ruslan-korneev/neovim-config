@@ -25,8 +25,8 @@ opt.scrolloff = 8
 opt.sidescrolloff = 8
 opt.fillchars = { eob = " ", fold = " " }
 
--- Statusline (minimal)
-opt.statusline = " %f %m%r %= %{&filetype}  %l:%c  %P "
+-- Statusline (minimal). Git branch comes from gitsigns (b:gitsigns_head).
+opt.statusline = " %f %m%r %= %{get(b:,'gitsigns_head','')!=''?' '.b:gitsigns_head.'  ':''}%{&filetype}  %l:%c  %P "
 
 -- Indentation
 opt.expandtab = true
