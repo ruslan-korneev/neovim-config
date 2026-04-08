@@ -120,20 +120,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
     local function map(mode, lhs, rhs, desc)
       vim.keymap.set(mode, lhs, rhs, { buffer = buf, desc = desc })
     end
-    map("n", "gd",         vim.lsp.buf.definition,      "Goto definition")
-    map("n", "gD",         vim.lsp.buf.declaration,     "Goto declaration")
-    map("n", "gi",         vim.lsp.buf.implementation,  "Implementation")
-    map("n", "gy",         vim.lsp.buf.type_definition, "Type definition")
-    map("n", "R",          vim.lsp.buf.rename,          "Rename")
-    map("n", "<leader>j",  vim.lsp.buf.references,      "References (finder)")
-    map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
+    -- Only bindings NOT already covered by Neovim 0.11+ LSP defaults live here.
+    -- Defaults (see :h lsp-defaults): K (hover), grn (rename), gra (code action),
+    -- grr (references), gri (implementation), grt (type definition), <C-s> in
+    -- insert mode (signature help).
+    map("n", "gd", vim.lsp.buf.definition,  "Goto definition")
+    map("n", "gD", vim.lsp.buf.declaration, "Goto declaration")
     map("n", "<leader>fm", function()
-      local ok_conform, conform = pcall(require, "conform")
-      if ok_conform then
-        conform.format({ async = true, lsp_format = "fallback" })
-      else
-        vim.lsp.buf.format({ async = true })
-      end
+      require("conform").format({ async = true, lsp_format = "fallback" })
     end, "Format")
     map("n", "[d",         function() vim.diagnostic.jump({ count = -1, float = true }) end, "Prev diagnostic")
     map("n", "]d",         function() vim.diagnostic.jump({ count =  1, float = true }) end, "Next diagnostic")

@@ -3,15 +3,21 @@ local map = vim.keymap.set
 -- ── Aux ─────────────────────────────────────────────────────────────────────
 map("i", "jj", "<Esc>", { desc = "Escape" })
 map("n", "x",  '"_x',   { desc = "Delete char (no yank)" })
-map("n", "dw", '"_db',  { desc = "Delete word back (no yank)" })
 
 -- ── Save / Quit ─────────────────────────────────────────────────────────────
 map("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
-map("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
+-- <C-s> saves in both normal and insert mode. `<cmd>` keeps insert-mode active
+-- so you don't get kicked out to normal after saving.
+map({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr>", { desc = "Write" })
 map("n", "<leader>o", "<cmd>w<cr><cmd>source %<cr>", { desc = "Save & source" })
 
 -- ── Search highlight ────────────────────────────────────────────────────────
 map("n", "<leader>ur", "<cmd>nohlsearch<cr>", { desc = "Clear hlsearch" })
+
+-- ── Inlay hints toggle ──────────────────────────────────────────────────────
+map("n", "<leader>uh", function()
+  vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+end, { desc = "Toggle inlay hints" })
 
 -- ── Panes / Windows ─────────────────────────────────────────────────────────
 map("n", "ss", "<cmd>split<cr>",  { desc = "Split horizontal" })

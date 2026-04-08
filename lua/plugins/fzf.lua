@@ -25,7 +25,10 @@ return {
   },
   opts = { "default-title" },
   config = function(_, opts)
-    require("fzf-lua").setup(opts)
+    local fzf = require("fzf-lua")
+    fzf.setup(opts)
+    -- Route vim.ui.select through fzf-lua (nicer code-action / LSP pickers).
+    fzf.register_ui_select()
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "fzf",
       callback = function(ev)

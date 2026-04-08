@@ -33,7 +33,9 @@ opt.expandtab = true
 opt.shiftwidth = 2
 opt.tabstop = 2
 opt.softtabstop = 2
-opt.smartindent = true
+-- smartindent is intentionally omitted: treesitter indentexpr is wired up per
+-- buffer in lua/plugins/treesitter.lua and conflicts with smartindent (stray
+-- indent after `{`, misaligned lines in lua/python).
 
 -- Search
 opt.ignorecase = true
@@ -60,3 +62,11 @@ opt.clipboard = "unnamedplus"
 opt.confirm = true
 opt.completeopt = "menu,menuone,noselect"
 opt.shortmess:append("c")
+
+-- Highlight yanked text briefly
+vim.api.nvim_create_autocmd("TextYankPost", {
+  group = vim.api.nvim_create_augroup("user-yank-highlight", { clear = true }),
+  callback = function()
+    vim.hl.on_yank({ timeout = 150 })
+  end,
+})

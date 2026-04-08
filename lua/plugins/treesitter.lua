@@ -21,6 +21,7 @@ return {
     vim.treesitter.language.register("json", "jsonc")
 
     vim.api.nvim_create_autocmd("FileType", {
+      group = vim.api.nvim_create_augroup("user-treesitter-start", { clear = true }),
       callback = function(args)
         local buf = args.buf
         local ft = vim.bo[buf].filetype
