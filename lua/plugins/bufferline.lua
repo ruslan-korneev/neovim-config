@@ -27,12 +27,12 @@ return {
     },
   },
   keys = {
-    { "gn",        "<cmd>BufferLineCycleNext<cr>",    desc = "Next buffer" },
-    { "gp",        "<cmd>BufferLineCyclePrev<cr>",    desc = "Prev buffer" },
+    { "gn",         "<cmd>BufferLineCycleNext<cr>",   desc = "Next buffer" },
+    { "gp",         "<cmd>BufferLineCyclePrev<cr>",   desc = "Prev buffer" },
     { "<leader>bp", "<cmd>BufferLineTogglePin<cr>",   desc = "Pin buffer" },
     { "<leader>bd", "<cmd>bdelete<cr>",               desc = "Delete buffer" },
     { "<leader>bo", "<cmd>BufferLineCloseOthers<cr>", desc = "Close other buffers" },
-    { "[b",        "<cmd>BufferLineMovePrev<cr>",     desc = "Move buffer left" },
-    { "]b",        "<cmd>BufferLineMoveNext<cr>",     desc = "Move buffer right" },
+    { "[b",         "<cmd>BufferLineMovePrev<cr>",    desc = "Move buffer left" },
+    { "]b",         "<cmd>BufferLineMoveNext<cr>",    desc = "Move buffer right" },
   },
 }

@@ -4,7 +4,7 @@ return {
   event = "InsertEnter",
   opts = {
     keymap = {
-      preset = "none",
+      preset        = "none",
       ["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
       ["<C-e>"]     = { "hide", "fallback" },
       ["<CR>"]      = { "accept", "fallback" },

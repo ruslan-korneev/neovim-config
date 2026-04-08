@@ -23,7 +23,12 @@ return {
         end
 
         local out = vim.fn.systemlist({
-          "git", "-C", root, "status", "--porcelain=v1", "--untracked-files=all",
+          "git",
+          "-C",
+          root,
+          "status",
+          "--porcelain=v1",
+          "--untracked-files=all",
         })
         if vim.v.shell_error ~= 0 then
           vim.notify("git status failed", vim.log.levels.ERROR)
