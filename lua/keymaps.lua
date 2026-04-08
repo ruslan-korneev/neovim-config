@@ -31,8 +31,22 @@ map("n", "gp", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
 -- ── Tabs ────────────────────────────────────────────────────────────────────
 map("n", "te", "<cmd>tabnew<cr>",   { desc = "New tab" })
 map("n", "tq", "<cmd>tabclose<cr>", { desc = "Close tab" })
-map("n", "<Tab>",   "<cmd>tabnext<cr>",     { desc = "Next tab" })
-map("n", "<S-Tab>", "<cmd>tabprevious<cr>", { desc = "Prev tab" })
+map("n", "gt", function()
+  if vim.fn.tabpagenr() == vim.fn.tabpagenr("$") then
+    vim.cmd("tabfirst")
+  else
+    vim.cmd("tabnext")
+  end
+end, { desc = "Next tab (cycle)" })
+map("n", "gT", function()
+  if vim.fn.tabpagenr() == 1 then
+    vim.cmd("tablast")
+  else
+    vim.cmd("tabprevious")
+  end
+end, { desc = "Prev tab (cycle)" })
+map("n", "<Tab>",   "gt", { remap = true, desc = "Next tab" })
+map("n", "<S-Tab>", "gT", { remap = true, desc = "Prev tab" })
 map("n", "<C-,>",   "<cmd>tabmove 0<cr>",   { desc = "Move tab to start" })
 map("n", "<C-.>",   "<cmd>tabmove +1<cr>",  { desc = "Move tab right" })
 

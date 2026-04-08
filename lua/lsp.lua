@@ -123,7 +123,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "gd",         vim.lsp.buf.definition,      "Goto definition")
     map("n", "gD",         vim.lsp.buf.declaration,     "Goto declaration")
     map("n", "gi",         vim.lsp.buf.implementation,  "Implementation")
-    map("n", "gt",         vim.lsp.buf.type_definition, "Type definition")
+    map("n", "gy",         vim.lsp.buf.type_definition, "Type definition")
     map("n", "R",          vim.lsp.buf.rename,          "Rename")
     map("n", "<leader>j",  vim.lsp.buf.references,      "References (finder)")
     map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")

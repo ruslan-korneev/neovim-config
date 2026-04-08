@@ -26,6 +26,7 @@ return {
       gitsigns = true,
       fzf = true,
       blink_cmp = true,
+      bufferline = true,
       markdown = true,
       mason = false,
       notify = false,
