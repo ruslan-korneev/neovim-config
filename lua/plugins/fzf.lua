@@ -24,4 +24,16 @@ return {
     { "<leader>ff", "<cmd>FzfLua files<cr>",                desc = "Find files" },
   },
   opts = { "default-title" },
+  config = function(_, opts)
+    require("fzf-lua").setup(opts)
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "fzf",
+      callback = function(ev)
+        -- In fzf's terminal prompt, `jj` leaves terminal-mode into normal-mode
+        vim.keymap.set("t", "jj", [[<C-\><C-n>]], { buffer = ev.buf, nowait = true })
+        -- Then `q` closes the fzf-lua window
+        vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = ev.buf, nowait = true })
+      end,
+    })
+  end,
 }
