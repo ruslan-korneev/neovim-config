@@ -8,7 +8,7 @@ return {
       "lua", "vim", "vimdoc", "query",
       "python",
       "javascript", "typescript", "tsx",
-      "html", "css", "json", "jsonc",
+      "html", "css", "json",
       "go", "gomod", "gosum",
       "rust",
       "c", "cpp",
@@ -16,6 +16,9 @@ return {
       "bash", "yaml", "toml", "regex", "diff",
     }
     require("nvim-treesitter").install(parsers)
+
+    -- jsonc has no dedicated parser on the main branch; reuse the json one.
+    vim.treesitter.language.register("json", "jsonc")
 
     vim.api.nvim_create_autocmd("FileType", {
       callback = function(args)
