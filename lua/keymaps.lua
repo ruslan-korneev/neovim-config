@@ -46,10 +46,11 @@ map("n", "<C-k>", function() vim.diagnostic.jump({ count = -1, float = true }) e
 -- Buffer-local K is also set in LspAttach when an LSP is attached; this global
 -- mapping covers buffers without LSP and prevents the default `K` behaviour.
 map("n", "K", function()
-  if next(vim.lsp.get_clients({ bufnr = 0 })) then
+  local clients = vim.lsp.get_clients({ bufnr = 0, method = "textDocument/hover" })
+  if next(clients) then
     vim.lsp.buf.hover()
   else
-    vim.notify("No LSP client attached to this buffer", vim.log.levels.INFO)
+    vim.notify("No LSP hover provider for this buffer", vim.log.levels.INFO)
   end
 end, { desc = "Hover" })
 

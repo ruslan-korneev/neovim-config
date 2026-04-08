@@ -4,6 +4,7 @@
 -- Install language servers manually (no mason):
 --   brew install lua-language-server gopls rust-analyzer llvm
 --   npm i -g vscode-langservers-extracted vtsls basedpyright
+--   uv tool install ruff  (provides `ruff server` LSP; per-project ruff from .venv is preferred)
 --
 -- llvm provides clangd. vscode-langservers-extracted provides html/cssls/jsonls.
 
@@ -12,6 +13,8 @@ local servers = {
   "gopls",
   "vtsls",
   "basedpyright",
+  -- ruff is started manually via FileType autocmd below so we can prefer
+  -- a project-local .venv/bin/ruff over the global uv-installed one.
   "rust_analyzer",
   "clangd",
   "html",
@@ -28,6 +31,51 @@ vim.lsp.config("*", {
 })
 
 -- Per-server overrides
+-- basedpyright: keep hover/goto/completion, but let ruff own diagnostics.
+-- `ignore = {"**"}` makes the analyzer skip publishing diagnostics for all files
+-- while leaving the rest of the language features intact.
+vim.lsp.config("basedpyright", {
+  settings = {
+    basedpyright = {
+      analysis = {
+        ignore = { "**" },
+      },
+    },
+  },
+})
+
+-- ruff: started manually per-buffer so we can resolve the binary dynamically.
+-- Prefer <root>/.venv/bin/ruff (e.g. `uv add --dev ruff` + `uv sync`), fall back
+-- to the global `ruff` on $PATH (installed via `uv tool install ruff`).
+-- Hover is disabled so basedpyright owns hover docs.
+local function resolve_ruff_cmd(root)
+  if root then
+    for _, p in ipairs({ root .. "/.venv/bin/ruff", root .. "/venv/bin/ruff" }) do
+      if vim.uv.fs_stat(p) then
+        return { p, "server" }
+      end
+    end
+  end
+  return { "ruff", "server" }
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("user-ruff-lsp", { clear = true }),
+  pattern = "python",
+  callback = function(ev)
+    local root = vim.fs.root(ev.buf, { "pyproject.toml", "uv.lock", "setup.py", "setup.cfg", ".git" })
+    vim.lsp.start({
+      name = "ruff",
+      cmd = resolve_ruff_cmd(root),
+      root_dir = root,
+      capabilities = capabilities,
+      on_attach = function(client, _)
+        client.server_capabilities.hoverProvider = false
+      end,
+    })
+  end,
+})
+
 vim.lsp.config("lua_ls", {
   settings = {
     Lua = {
