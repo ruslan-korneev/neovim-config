@@ -18,7 +18,7 @@ Rewritten from scratch for Neovim 0.11+: native LSP API (`vim.lsp.config` / `vim
 | Treesitter      | `nvim-treesitter` (`main` branch, local compile)    |
 | Text objects    | `mini.ai` + `nvim-treesitter-textobjects`           |
 | Formatting      | `conform.nvim`                                      |
-| Git             | `gitsigns.nvim`                                     |
+| Git             | `gitsigns.nvim` + `lazygit.nvim`                    |
 | Buffers         | `bufferline.nvim`                                   |
 | AI              | `codeium.vim` (Windsurf)                            |
 | Cursor FX       | `smear-cursor.nvim`                                 |
